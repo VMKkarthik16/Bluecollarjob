@@ -64,7 +64,35 @@ const Viewjobsbyuser = async (req,res) =>{
 }
 
 const UserEditJob = async (req,res) =>{
-    const useredit = 
+    const useredit = req.body;
+    const {userid }= req.params;
+    console.log(useredit);
+    console.log(userid);
+    try {
+    const edit = await Registerjob.findByIdAndUpdate(userid , useredit , {new:true})
+    console.log(edit);
+        res.status(200).json("upadated successfully")
+        
+    } catch (error) {
+        console.error(`Error updating job: ${error.message}`);
+        res.status(400).send("error updating")
+    }
+    
 }
 
-module.exports = {Registerjobs , Viewjobsbyuser};
+const Userdeletejob = async(req,res) =>{
+    const {userid}  = req.params;
+    try {
+        const deletejob = await Registerjob.findByIdAndDelete(userid)
+        if (!deletejob) {
+            res.status(200).json("job is not registered")
+        }
+        res.status(200).json("Deleted Successfully")
+    } catch (error) {
+        res.status(400).json("message:" ,error)
+    }
+}
+
+
+
+module.exports = {Registerjobs , Viewjobsbyuser , UserEditJob , Userdeletejob};
